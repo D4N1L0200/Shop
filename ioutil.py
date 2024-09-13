@@ -16,7 +16,12 @@ def input_int_minmax(prompt: str, min: int, max: int) -> int:
     while True:
         inp_str: str = input(prompt)
 
-        if not inp_str.isnumeric():
+        trim_inp_str: str = inp_str
+
+        if trim_inp_str[0] == "-":
+            trim_inp_str = trim_inp_str[1:]
+
+        if not trim_inp_str.isnumeric():
             print("Invalid input. Please enter a number.\n")
             continue
 
@@ -36,11 +41,39 @@ def input_int_minmax(prompt: str, min: int, max: int) -> int:
 
 
 @eofcatch
+def input_int_min(prompt: str, min: int) -> int:
+    while True:
+        inp_str: str = input(prompt)
+
+        trim_inp_str: str = inp_str
+
+        if trim_inp_str[0] == "-":
+            trim_inp_str = trim_inp_str[1:]
+
+        if not trim_inp_str.isnumeric():
+            print("Invalid input. Please enter a number.\n")
+            continue
+
+        inp: int = int(inp_str)
+
+        if inp < min:
+            print(f"Invalid input. Please enter a number above {str(min)}.\n")
+            continue
+
+        return inp
+
+
+@eofcatch
 def input_int(prompt: str) -> int:
     while True:
         inp_str: str = input(prompt)
 
-        if not inp_str.isnumeric():
+        trim_inp_str: str = inp_str
+
+        if trim_inp_str[0] == "-":
+            trim_inp_str = trim_inp_str[1:]
+
+        if not trim_inp_str.isnumeric():
             print("Invalid input. Please enter a number.\n")
             continue
 
@@ -50,11 +83,47 @@ def input_int(prompt: str) -> int:
 
 
 @eofcatch
+def input_float_min(prompt: str, min: float) -> float:
+    while True:
+        inp_str: str = input(prompt)
+
+        trim_inp_str: str = inp_str
+        idx: int = inp_str.find(".")
+
+        if idx != -1:
+            trim_inp_str = trim_inp_str[:idx] + trim_inp_str[idx + 1 :]
+
+        if trim_inp_str[0] == "-":
+            trim_inp_str = trim_inp_str[1:]
+
+        if not trim_inp_str.isnumeric():
+            print("Invalid input. Please enter a number.\n")
+            continue
+
+        inp: float = float(inp_str)
+
+        if inp < min:
+            print(f"Invalid input. Please enter a number above {str(min)}.\n")
+            continue
+
+        return inp
+
+
+@eofcatch
 def input_float(prompt: str) -> float:
     while True:
         inp_str: str = input(prompt)
 
-        if not inp_str.isnumeric():
+        trim_inp_str: str = inp_str
+        idx: int = inp_str.find(".")
+
+        if idx != -1:
+            trim_inp_str = trim_inp_str[:idx] + trim_inp_str[idx + 1 :]
+
+        if trim_inp_str[0] == "-":
+            trim_inp_str = trim_inp_str[1:]
+
+        if not trim_inp_str.isnumeric():
             print("Invalid input. Please enter a float.\n")
             continue
 
@@ -64,11 +133,11 @@ def input_float(prompt: str) -> float:
 
 
 @eofcatch
-def input_str(prompt: str) -> str:
+def input_str(prompt: str, allow_empty: bool = False) -> str:
     while True:
         inp: str = input(prompt)
 
-        if not inp:
+        if not inp and not allow_empty:
             print("Invalid input. Please enter a string.\n")
             continue
 

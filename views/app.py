@@ -54,12 +54,12 @@ class AppView:
     def products_menu(cls) -> int:
         print()
         print("1. List products")
-        print("2. Add product (Not implemented)")
-        print("3. Update product (Not implemented)")
-        print("4. Remove product (Not implemented)")
+        print("2. Add product")
+        print("3. Update product")
+        print("4. Remove product")
         print("5. Search product (Not implemented)")
-        print("6. Add stock (Not implemented)")
-        print("7. Remove stock (Not implemented)")
+        print("6. Add stock")
+        print("7. Remove stock")
         print("8. Exit")
         return input_int_minmax(" > ", 1, 8)
 

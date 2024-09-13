@@ -1,13 +1,13 @@
 class Product:
     def __init__(
         self,
-        prod_id: int,
+        prod_id: str,
         name: str,
         description: str,
         price: float,
         stock: int,
     ) -> None:
-        self.__id: int = 0
+        self.__id: str = ""
         self.__name: str = ""
         self.__description: str = ""
         self.__price: float = 0
@@ -19,7 +19,7 @@ class Product:
         self.set_price(price)
         self.set_stock(stock)
 
-    def get_id(self) -> int:
+    def get_id(self) -> str:
         return self.__id
 
     def get_name(self) -> str:
@@ -34,8 +34,8 @@ class Product:
     def get_stock(self) -> int:
         return self.__stock
 
-    def set_id(self, prod_id: int) -> None:
-        if not isinstance(prod_id, int) or prod_id < 0:
+    def set_id(self, prod_id: str) -> None:
+        if not isinstance(prod_id, str) or len(prod_id) == 0:
             raise ValueError(f"Invalid value for id: {prod_id}")
 
         self.__id = prod_id
@@ -62,5 +62,22 @@ class Product:
         if not isinstance(stock, int) or stock < 0:
             raise ValueError(f"Invalid value for stock: {stock}")
 
+        self.__stock = stock
+        
+    def increase_stock(self, amount: int) -> None:
+        if not isinstance(amount, int) or amount < 0:
+            raise ValueError(f"Invalid value for amount: {amount}")
+
+        self.__stock += amount
+        
+    def decrease_stock(self, amount: int) -> None:
+        if not isinstance(amount, int) or amount < 0:
+            raise ValueError(f"Invalid value for amount: {amount}")
+
+        self.__stock -= amount
+
+    def get_info(self) -> str:
+        return f"R${self.get_price()} - {self.get_name()}, {self.get_stock()} in stock."
+
     def __str__(self) -> str:
-        return f"({self.__id}) {self.__name} - {self.__description} - R${self.__price} - {self.__stock} in stock."
+        return f"R${self.get_price()} - {self.get_name()}, {self.get_stock()} in stock.\n  - {self.get_description()}"

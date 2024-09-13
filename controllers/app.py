@@ -1,5 +1,6 @@
 from models import App, Product  # type: ignore
 from views import AppView, ProductView  # type: ignore
+import uuid
 
 
 class AppController:
@@ -11,6 +12,7 @@ class AppController:
 
     def main(self) -> None:
         self.app.load_data()
+        self.prod_contr.load_data()
 
         AppView.message("App initialized.")
 
@@ -85,17 +87,7 @@ class AppController:
                     self.app.running = False
                     break
 
-    # User & Admin methods
-
-    def list_products(self) -> None:
-        products: list[Product] = self.prod_contr.get_products()
-        ProductView.list_products(products)
-
-    def logout(self) -> None:
-        message = self.app.logout()
-        AppView.message(message)
-
-    # Admin methods
+    # Admin loops
 
     def manage_products_loop(self) -> None:
         while True:
@@ -105,17 +97,17 @@ class AppController:
                 case 1:
                     self.list_products()
                 case 2:
-                    pass
+                    self.add_product()
                 case 3:
-                    pass
+                    self.update_product()
                 case 4:
-                    pass
+                    self.remove_product()
                 case 5:
-                    pass
+                    self.search_product()
                 case 6:
-                    pass
+                    self.increase_stock()
                 case 7:
-                    break
+                    self.decrease_stock()
                 case 8:
                     break
 
@@ -127,3 +119,86 @@ class AppController:
 
     def manage_users_loop(self) -> None:
         pass
+
+    # User & Admin methods
+
+    def list_products(self) -> None:
+        products: list[Product] = self.prod_contr.get_products()
+        ProductView.list_products(products)
+
+    def logout(self) -> None:
+        message = self.app.logout()
+        AppView.message(message)
+
+    ## Admin methods
+    # Product manager
+
+    def add_product(self) -> None:
+        prod_name: str = ProductView.input_product_name()
+        prod_description: str = ProductView.input_product_description()
+        prod_price: float = ProductView.input_product_price()
+        prod_stock: int = ProductView.input_product_stock()
+
+        prod_id: uuid.UUID = uuid.uuid5(uuid.NAMESPACE_DNS, prod_name)
+
+        product: Product = Product(
+            prod_id.hex, prod_name, prod_description, prod_price, prod_stock
+        )
+
+        self.prod_contr.insert(product)
+
+    def update_product(self) -> None:
+        prod_idx: int = (
+            ProductView.input_product_index(self.prod_contr.get_products_len()) - 1
+        )
+        prod_id: str = self.prod_contr.idx_to_id(prod_idx)
+
+        old_prod: Product = self.prod_contr.get_product_by_id(prod_id)
+
+        prod_name: str = ProductView.update_product_name(old_prod.get_name())
+        prod_description: str = ProductView.update_product_description(
+            old_prod.get_description()
+        )
+        prod_price: float = ProductView.update_product_price(old_prod.get_price())
+        prod_stock: int = ProductView.update_product_stock(old_prod.get_stock())
+
+        product: Product = Product(
+            prod_id, prod_name, prod_description, prod_price, prod_stock
+        )
+
+        if self.prod_contr.id_exists(prod_id):
+            self.prod_contr.update(prod_id, product)
+
+    def remove_product(self) -> None:
+        prod_idx: int = (
+            ProductView.input_product_index(self.prod_contr.get_products_len()) - 1
+        )
+        prod_id: str = self.prod_contr.idx_to_id(prod_idx)
+
+        if self.prod_contr.id_exists(prod_id):
+            self.prod_contr.delete_by_id(prod_id)
+
+    def search_product(self) -> None:
+        pass
+
+    def increase_stock(self) -> None:
+        prod_idx: int = (
+            ProductView.input_product_index(self.prod_contr.get_products_len()) - 1
+        )
+        prod_id: str = self.prod_contr.idx_to_id(prod_idx)
+
+        amount: int = ProductView.input_stock_change()
+
+        if self.prod_contr.id_exists(prod_id):
+            self.prod_contr.increase_stock(prod_id, amount)
+            
+    def decrease_stock(self) -> None:
+        prod_idx: int = (
+            ProductView.input_product_index(self.prod_contr.get_products_len()) - 1
+        )
+        prod_id: str = self.prod_contr.idx_to_id(prod_idx)
+
+        amount: int = ProductView.input_stock_change()
+
+        if self.prod_contr.id_exists(prod_id):
+            self.prod_contr.decrease_stock(prod_id, amount)
