@@ -53,17 +53,15 @@ class AppController:
 
             match op:
                 case 1:
-                    AppView.message("List products.")
                     self.list_products()
                 case 2:
-                    AppView.message("Add to cart.")
+                    pass
                 case 3:
-                    AppView.message("Checkout.")
+                    pass
                 case 4:
-                    AppView.message("Change password.")
+                    pass
                 case 5:
-                    message = self.app.logout()
-                    AppView.message(message)
+                    self.logout()
                 case 6:
                     self.app.running = False
                     break
@@ -74,32 +72,58 @@ class AppController:
 
             match op:
                 case 1:
-                    AppView.message("List products.")
-                    self.list_products()
+                    self.manage_products_loop()
                 case 2:
-                    AppView.message("Add product.")
+                    self.manage_orders_loop()
                 case 3:
-                    AppView.message("Update product.")
+                    self.manage_finances_loop()
                 case 4:
-                    AppView.message("Remove product.")
+                    self.manage_users_loop()
                 case 5:
-                    AppView.message("List orders.")
+                    self.logout()
                 case 6:
-                    AppView.message("Create order.")
-                case 7:
-                    AppView.message("Update order.")
-                case 8:
-                    AppView.message("Cancel order.")
-                case 9:
-                    AppView.message("Get report.")
-                case 10:
-                    message = self.app.logout()
-                    AppView.message(message)
-                case 11:
                     self.app.running = False
                     break
 
+    # User & Admin methods
+
     def list_products(self) -> None:
         products: list[Product] = self.prod_contr.get_products()
-
         ProductView.list_products(products)
+
+    def logout(self) -> None:
+        message = self.app.logout()
+        AppView.message(message)
+
+    # Admin methods
+
+    def manage_products_loop(self) -> None:
+        while True:
+            op: int = AppView.products_menu()
+
+            match op:
+                case 1:
+                    self.list_products()
+                case 2:
+                    pass
+                case 3:
+                    pass
+                case 4:
+                    pass
+                case 5:
+                    pass
+                case 6:
+                    pass
+                case 7:
+                    break
+                case 8:
+                    break
+
+    def manage_orders_loop(self) -> None:
+        pass
+
+    def manage_finances_loop(self) -> None:
+        pass
+
+    def manage_users_loop(self) -> None:
+        pass
