@@ -27,21 +27,31 @@ class AppView:
         return username, password
 
     @classmethod
-    def main_menu(cls) -> int:
+    def user_menu(cls, username: str) -> int:
         print()
-        # logged admin:
-        # list products
-        # add product
-        # update product
-        # remove product
-        # list orders
-        # logout
-        # exit
+        print(f"\tWelcome, {username}!")
+        print("1. List products")
+        print("2. Add to cart (Not implemented)")
+        print("3. Checkout (Not implemented)")
+        print("4. Change password (Not implemented)")
+        print("5. Logout")
+        print("6. Exit")
+        return input_int_minmax(" > ", 1, 6)
 
-        # logged user:
-        # list products
-        # add to cart
-        # checkout
-        # logout
-        # exit
-        return input_int_minmax(" > ", 1, 5)
+    @classmethod
+    def admin_menu(cls) -> int:
+        # TODO: edit to have submenus
+        print()
+        print("\tWelcome, admin!")
+        print("1. List products")
+        print("2. Add product (Not implemented)")
+        print("3. Update product (Not implemented)")
+        print("4. Remove product (Not implemented)")
+        print("5. List orders (Not implemented)")
+        print("6. Create order (Not implemented)")
+        print("7. Update order (Not implemented)")
+        print("8. Cancel order (Not implemented)")
+        print("9. Get report (Not implemented)")
+        print("10. Logout")
+        print("11. Exit")
+        return input_int_minmax(" > ", 1, 11)

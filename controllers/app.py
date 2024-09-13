@@ -10,68 +10,94 @@ class AppController:
         self.prod_contr: ProductController = ProductController()
 
     def main(self) -> None:
-        """
-        logged admin:
-        list products
-        add product
-        update product
-        remove product
-        list orders
-        logout
-        exit
-
-        logged user:
-        list products
-        add to cart
-        checkout
-        logout
-        exit
-        """
-
         self.app.load_data()
 
         AppView.message("App initialized.")
 
-        while not self.app.logged:
+        try:
+            while self.app.running:
+                if self.app.logged_in:
+                    if self.app.username == "admin":
+                        self.admin_loop()
+                    else:
+                        self.user_loop()
+                else:
+                    self.unlogged_loop()
+        except KeyboardInterrupt:
+            self.app.running = False
+
+        AppView.message("App finished.")
+
+    def unlogged_loop(self) -> None:
+        while not self.app.logged_in:
             op: int = AppView.unlogged_menu()
 
             match op:
                 case 1:
                     AppView.message("Login menu.")
                     username, password = AppView.login_menu()
-                    # AppView.message(f"Username: {username} | Password: {password}")
                     message = self.app.login(username, password)
                     AppView.message(message)
                 case 2:
                     AppView.message("Register menu.")
                     username, password = AppView.register_menu()
-                    # AppView.message(f"Username: {username} | Password: {password}")
                     message = self.app.register(username, password)
                     AppView.message(message)
                 case 3:
-                    AppView.message("App finished.")
+                    self.app.running = False
                     break
-            # match op:
-            #     case 1:
-            #         self.add_product()
-            #     case 2:
-            #         self.update_product()
-            #     case 3:
-            #         self.remove_product()
-            #     case 4:
-            #         self.list_products()
-            #     case 5:
-            #         AppView.message("App finished.")
-            #         break
 
-    def add_product(self) -> None:
-        pass
+    def user_loop(self) -> None:
+        while self.app.logged_in:
+            op: int = AppView.user_menu(self.app.username)
 
-    def update_product(self) -> None:
-        pass
+            match op:
+                case 1:
+                    AppView.message("List products.")
+                    self.list_products()
+                case 2:
+                    AppView.message("Add to cart.")
+                case 3:
+                    AppView.message("Checkout.")
+                case 4:
+                    AppView.message("Change password.")
+                case 5:
+                    message = self.app.logout()
+                    AppView.message(message)
+                case 6:
+                    self.app.running = False
+                    break
 
-    def remove_product(self) -> None:
-        pass
+    def admin_loop(self) -> None:
+        while self.app.logged_in:
+            op: int = AppView.admin_menu()
+
+            match op:
+                case 1:
+                    AppView.message("List products.")
+                    self.list_products()
+                case 2:
+                    AppView.message("Add product.")
+                case 3:
+                    AppView.message("Update product.")
+                case 4:
+                    AppView.message("Remove product.")
+                case 5:
+                    AppView.message("List orders.")
+                case 6:
+                    AppView.message("Create order.")
+                case 7:
+                    AppView.message("Update order.")
+                case 8:
+                    AppView.message("Cancel order.")
+                case 9:
+                    AppView.message("Get report.")
+                case 10:
+                    message = self.app.logout()
+                    AppView.message(message)
+                case 11:
+                    self.app.running = False
+                    break
 
     def list_products(self) -> None:
         products: list[Product] = self.prod_contr.get_products()

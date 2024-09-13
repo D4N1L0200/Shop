@@ -1,11 +1,13 @@
 import json
+import uuid
 
 
 class App:
     def __init__(self) -> None:
+        self.running: bool = True
         self.username: str = ""
         self.password: str = ""
-        self.logged: bool = False
+        self.logged_in: bool = False
 
     def load_data(self) -> None:
         with open("data/settings.json", "r") as file:
@@ -18,8 +20,66 @@ class App:
         self.login(self.username, self.password)
 
     def login(self, username: str, password: str) -> str:
-        return "Failed to login."
+        user_id = uuid.uuid5(uuid.NAMESPACE_DNS, username)
+
+        with open("data/users.json", "r") as file:
+            data: dict = json.load(file)
+
+        if user_id.hex not in data:
+            return "User not found."
+
+        user = data[user_id.hex]
+
+        if user["password"] != password:
+            return "Invalid password."
+
+        self.logged_in = True
+        self.username = username
+        self.password = password
+
+        with open("data/settings.json", "w") as file:
+            json.dump(
+                {
+                    "logged": self.logged_in,
+                    "username": self.username,
+                    "password": self.password,
+                },
+                file,
+                indent=4,
+            )
+
+        return f"Successfully logged in as {self.username}."
 
     def register(self, username: str, password: str) -> str:
-        
-        return "Failed to register."
+        user_id = uuid.uuid5(uuid.NAMESPACE_DNS, username)
+
+        with open("data/users.json", "r") as file:
+            data: dict = json.load(file)
+
+        if user_id.hex in data:
+            return "User already exists."
+
+        data[user_id.hex] = {"username": username, "password": password}
+
+        with open("data/users.json", "w") as file:
+            json.dump(data, file, indent=4)
+
+        return "Successfully registered, please login."
+
+    def logout(self) -> str:
+        self.logged_in = False
+        self.username = ""
+        self.password = ""
+
+        with open("data/settings.json", "w") as file:
+            json.dump(
+                {
+                    "logged": self.logged_in,
+                    "username": self.username,
+                    "password": self.password,
+                },
+                file,
+                indent=4,
+            )
+
+        return "Successfully logged out."

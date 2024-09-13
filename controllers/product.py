@@ -3,14 +3,6 @@ from models import Product
 
 class ProductController:
     products: list[Product] = []
-    logging: bool = False
-
-    @classmethod
-    def set_logging(cls, logging: bool) -> None:
-        if not isinstance(logging, bool):
-            raise ValueError(f"Invalid value for logging: {logging}")
-
-        cls.logging = logging
 
     @classmethod
     def id_exists(cls, prod_id: int) -> bool:

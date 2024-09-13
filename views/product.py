@@ -3,10 +3,6 @@ from models import Product
 
 class ProductView:
     @classmethod
-    def log(cls, message: str) -> None:
-        print(f"[PRODUCT LOG] {message}")
-
-    @classmethod
     def message(cls, message: str) -> None:
         print(message)
 

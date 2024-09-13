@@ -7,8 +7,6 @@ def eofcatch(func):
             return func(*args, **kwargs)
         except EOFError:
             exit(0)
-        except KeyboardInterrupt:
-            exit(0)
 
     return wrapper
 
