@@ -45,7 +45,7 @@ class AppView:
         print("\tWelcome, admin!")
         print("1. Manage products (Partially implemented)")
         print("2. Manage orders (Not implemented)")
-        print("3. Manage finances (Not implemented)")
+        print("3. Manage finances (Partially implemented)")
         print("4. Manage users (Not implemented)")
         print("5. Logout")
         print("6. Exit")

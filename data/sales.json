@@ -1,0 +1,19 @@
+{
+	"962fabcf30eb5a60b05fdf295d11f4d0": [
+		{
+			"products": [
+				{
+					"prod_id": "e4fd6a8b4a555344b71c7f8aa1b8ffd3",
+					"quantity": 5,
+					"price": 174.95
+				},
+				{
+					"prod_id": "a086835ce02d59ef92be369295dffdd1",
+					"quantity": 1,
+					"price": 129.99
+				}
+			],
+			"total": 304.94
+		}
+	]
+}

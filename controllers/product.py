@@ -24,6 +24,8 @@ class StockManager:
                 "description": product.get_description(),
                 "price": product.get_price(),
                 "stock": product.get_stock(),
+                "pending": product.get_pending(),
+                "sold": product.get_sold(),
             }
 
         with open("data/products.json", "w") as file:

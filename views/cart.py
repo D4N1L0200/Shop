@@ -11,7 +11,7 @@ class CartView:
 
     @classmethod
     def input_buy_amount(cls, stock: int) -> int:
-        amount: int = input_int_minmax(f"Amount (max {stock}): ", 1, stock)
+        amount: int = input_int_minmax(f"Amount ({stock} in stock): ", 1, stock)
         return amount
 
     @classmethod

@@ -101,7 +101,7 @@ class AppController:
 
             match op:
                 case 1:
-                    self.list_products()
+                    self.list_products_admin()
                 case 2:
                     self.add_product()
                 case 3:
@@ -118,25 +118,66 @@ class AppController:
                     break
 
     def manage_orders_loop(self) -> None:
-        pass
+        while True:
+            op: int = AppView.orders_menu()
+
+            match op:
+                case 1:
+                    pass
+                case 2:
+                    pass
+                case 3:
+                    pass
+                case 4:
+                    pass
+                case 5:
+                    pass
+                case 6:
+                    break
 
     def manage_finances_loop(self) -> None:
-        pass
+        while True:
+            op: int = AppView.finances_menu()
+
+            match op:
+                case 1:
+                    self.get_report()
+                case 2:
+                    pass
+                case 3:
+                    break
 
     def manage_users_loop(self) -> None:
-        pass
+        while True:
+            op: int = AppView.users_menu()
+
+            match op:
+                case 1:
+                    pass
+                case 2:
+                    pass
+                case 3:
+                    pass
+                case 4:
+                    pass
+                case 5:
+                    pass
+                case 6:
+                    pass
+                case 7:
+                    break
 
     # User & Admin methods
-
-    def list_products(self) -> None:
-        products: list[Product] = self.stock_mngr.get_products()
-        ProductView.list_products(products)
 
     def logout(self) -> None:
         message = self.app.logout()
         AppView.message(message)
 
     ## User methods
+
+    def list_products(self) -> None:
+        products: list[Product] = self.stock_mngr.get_products()
+        ProductView.list_products(products)
 
     def add_to_cart(self) -> None:
         prod_idx: int = (
@@ -186,6 +227,10 @@ class AppController:
     ## Admin methods
     # Product manager
 
+    def list_products_admin(self) -> None:
+        products: list[Product] = self.stock_mngr.get_products()
+        ProductView.list_products_full(products)
+
     def add_product(self) -> None:
         prod_name: str = ProductView.input_product_name()
         prod_description: str = ProductView.input_product_description()
@@ -195,7 +240,7 @@ class AppController:
         prod_id: uuid.UUID = uuid.uuid5(uuid.NAMESPACE_DNS, prod_name)
 
         product: Product = Product(
-            prod_id.hex, prod_name, prod_description, prod_price, prod_stock
+            prod_id.hex, prod_name, prod_description, prod_price, prod_stock, 0, 0
         )
 
         self.stock_mngr.insert(product)
@@ -214,9 +259,17 @@ class AppController:
         )
         prod_price: float = ProductView.update_product_price(old_prod.get_price())
         prod_stock: int = ProductView.update_product_stock(old_prod.get_stock())
+        prod_pending: int = ProductView.update_product_pending(old_prod.get_pending())
+        prod_sold: int = ProductView.update_product_sold(old_prod.get_sold())
 
         product: Product = Product(
-            prod_id, prod_name, prod_description, prod_price, prod_stock
+            prod_id,
+            prod_name,
+            prod_description,
+            prod_price,
+            prod_stock,
+            prod_pending,
+            prod_sold,
         )
 
         if not self.stock_mngr.id_exists(prod_id):
@@ -263,3 +316,10 @@ class AppController:
             raise ValueError(f"Product not found: {prod_id}")
 
         self.stock_mngr.decrease_stock(prod_id, amount)
+
+    # Order manager
+
+    # Finance manager
+
+    def get_report(self) -> None:
+        pass

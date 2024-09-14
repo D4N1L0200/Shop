@@ -17,9 +17,9 @@ def input_int_minmax(prompt: str, min: int, max: int) -> int:
     while True:
         inp_str: str = input(prompt)
 
-        trim_inp_str: str = inp_str
+        trim_inp_str: str = inp_str.strip()
 
-        if trim_inp_str[0] == "-":
+        if len(trim_inp_str) > 1 and trim_inp_str[0] == "-":
             trim_inp_str = trim_inp_str[1:]
 
         if not trim_inp_str.isnumeric():
@@ -46,9 +46,9 @@ def input_int_min(prompt: str, min: int) -> int:
     while True:
         inp_str: str = input(prompt)
 
-        trim_inp_str: str = inp_str
+        trim_inp_str: str = inp_str.strip()
 
-        if trim_inp_str[0] == "-":
+        if len(trim_inp_str) > 1 and trim_inp_str[0] == "-":
             trim_inp_str = trim_inp_str[1:]
 
         if not trim_inp_str.isnumeric():
@@ -69,9 +69,9 @@ def input_int(prompt: str) -> int:
     while True:
         inp_str: str = input(prompt)
 
-        trim_inp_str: str = inp_str
+        trim_inp_str: str = inp_str.strip()
 
-        if trim_inp_str[0] == "-":
+        if len(trim_inp_str) > 1 and trim_inp_str[0] == "-":
             trim_inp_str = trim_inp_str[1:]
 
         if not trim_inp_str.isnumeric():
@@ -88,13 +88,13 @@ def input_float_min(prompt: str, min: float) -> float:
     while True:
         inp_str: str = input(prompt)
 
-        trim_inp_str: str = inp_str
+        trim_inp_str: str = inp_str.strip()
         idx: int = inp_str.find(".")
 
         if idx != -1:
             trim_inp_str = trim_inp_str[:idx] + trim_inp_str[idx + 1 :]
 
-        if trim_inp_str[0] == "-":
+        if len(trim_inp_str) > 1 and trim_inp_str[0] == "-":
             trim_inp_str = trim_inp_str[1:]
 
         if not trim_inp_str.isnumeric():
@@ -115,13 +115,13 @@ def input_float(prompt: str) -> float:
     while True:
         inp_str: str = input(prompt)
 
-        trim_inp_str: str = inp_str
+        trim_inp_str: str = inp_str.strip()
         idx: int = inp_str.find(".")
 
         if idx != -1:
             trim_inp_str = trim_inp_str[:idx] + trim_inp_str[idx + 1 :]
 
-        if trim_inp_str[0] == "-":
+        if len(trim_inp_str) > 1 and trim_inp_str[0] == "-":
             trim_inp_str = trim_inp_str[1:]
 
         if not trim_inp_str.isnumeric():
@@ -136,7 +136,7 @@ def input_float(prompt: str) -> float:
 @eofcatch
 def input_str(prompt: str, allow_empty: bool = False) -> str:
     while True:
-        inp: str = input(prompt)
+        inp: str = input(prompt).strip()
 
         if not inp and not allow_empty:
             print("Invalid input. Please enter a string.\n")
@@ -148,7 +148,7 @@ def input_str(prompt: str, allow_empty: bool = False) -> str:
 @eofcatch
 def input_username(prompt: str) -> str:
     while True:
-        inp: str = input(prompt)
+        inp: str = input(prompt).strip()
 
         if not inp:
             print("Invalid input. Please enter a username.\n")
@@ -174,7 +174,7 @@ def input_username(prompt: str) -> str:
 @eofcatch
 def input_password(prompt: str) -> str:
     while True:
-        password: str = getpass(prompt)
+        password: str = getpass(prompt).strip()
 
         if not password:
             print("Invalid input. Please enter a password.\n")

@@ -18,6 +18,16 @@ class ProductView:
             cls.message(f"{idx + 1}. {product.get_info()}")
 
     @classmethod
+    def list_products_full(cls, products: list[Product]) -> None:
+        if not products:
+            cls.message("No products found.")
+            return
+
+        cls.message("\tProducts:")
+        for idx, product in enumerate(products):
+            cls.message(f"{"\n" if idx else ""}{idx + 1}. {product.get_info_full()}")
+
+    @classmethod
     def input_product_name(cls) -> str:
         prod_name: str = input_str("Product name: ")
         return prod_name
@@ -77,6 +87,26 @@ class ProductView:
         if prod_stock == -1:
             return old_stock
         return prod_stock
+
+    @classmethod
+    def update_product_pending(cls, old_pending: int) -> int:
+        prod_pending: int = input_int_min(
+            f"Product pending (leave '-1' for '{old_pending}'): ", -1
+        )
+
+        if prod_pending == -1:
+            return old_pending
+        return prod_pending
+
+    @classmethod
+    def update_product_sold(cls, old_sold: int) -> int:
+        prod_sold: int = input_int_min(
+            f"Product sold (leave '-1' for '{old_sold}'): ", -1
+        )
+
+        if prod_sold == -1:
+            return old_sold
+        return prod_sold
 
     @classmethod
     def input_product_index(cls, products_len: int) -> int:
