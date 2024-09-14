@@ -2,23 +2,23 @@ from models import Product
 import json
 
 
-class ProductController:
+class StockManager:
     products: list[Product] = []
 
     @classmethod
-    def load_data(self) -> None:
+    def load_data(cls) -> None:
         with open("data/products.json", "r") as file:
             data: dict = json.load(file)
 
         for prod_id in data:
             prod: Product = Product(prod_id, **data[prod_id])
 
-            self.insert(prod)
+            cls.insert(prod)
 
     @classmethod
-    def save_data(self) -> None:
+    def save_data(cls) -> None:
         out = {}
-        for product in self.products:
+        for product in cls.products:
             out[product.get_id()] = {
                 "name": product.get_name(),
                 "description": product.get_description(),

@@ -1,2 +1,3 @@
 from .app import AppController
-from .product import ProductController
+from .cart import Cart
+from .product import StockManager

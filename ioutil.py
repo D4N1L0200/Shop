@@ -1,7 +1,8 @@
 from getpass import getpass
+from typing import Callable
 
 
-def eofcatch(func):
+def eofcatch(func: Callable):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)

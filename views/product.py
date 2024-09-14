@@ -15,7 +15,7 @@ class ProductView:
 
         cls.message("\tProducts:")
         for idx, product in enumerate(products):
-            cls.message(f"({idx + 1}) {product.get_info()}")
+            cls.message(f"{idx + 1}. {product.get_info()}")
 
     @classmethod
     def input_product_name(cls) -> str:

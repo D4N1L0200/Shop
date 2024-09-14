@@ -1,10 +1,20 @@
 {
-	"962fabcf30eb5a60b05fdf295d11f4d0": {
-		"username": "DelNailo",
-		"password": "pedro123"
-	},
-	"bace070115e3514497c547487d543032": {
-		"username": "admin",
-		"password": "admin"
-	}
+    "962fabcf30eb5a60b05fdf295d11f4d0": {
+        "username": "DelNailo",
+        "password": "pedro123",
+        "cart": [
+            {
+                "prod_id": "e4fd6a8b4a555344b71c7f8aa1b8ffd3",
+                "quantity": 3
+            },
+            {
+                "prod_id": "a086835ce02d59ef92be369295dffdd1",
+                "quantity": 2
+            }
+        ]
+    },
+    "bace070115e3514497c547487d543032": {
+        "username": "admin",
+        "password": "admin"
+    }
 }

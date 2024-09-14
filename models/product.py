@@ -29,7 +29,7 @@ class Product:
         return self.__description
 
     def get_price(self) -> float:
-        return self.__price
+        return round(self.__price, 2)
 
     def get_stock(self) -> int:
         return self.__stock
@@ -63,13 +63,13 @@ class Product:
             raise ValueError(f"Invalid value for stock: {stock}")
 
         self.__stock = stock
-        
+
     def increase_stock(self, amount: int) -> None:
         if not isinstance(amount, int) or amount < 0:
             raise ValueError(f"Invalid value for amount: {amount}")
 
         self.__stock += amount
-        
+
     def decrease_stock(self, amount: int) -> None:
         if not isinstance(amount, int) or amount < 0:
             raise ValueError(f"Invalid value for amount: {amount}")
@@ -77,7 +77,8 @@ class Product:
         self.__stock -= amount
 
     def get_info(self) -> str:
-        return f"R${self.get_price()} - {self.get_name()}, {self.get_stock()} in stock."
+        stock: str = f"{self.get_stock()}" if self.get_stock() > 1 else "not"
+        return f"R${self.get_price()} - {self.get_name()}, {stock} in stock."
 
     def __str__(self) -> str:
         return f"R${self.get_price()} - {self.get_name()}, {self.get_stock()} in stock.\n  - {self.get_description()}"

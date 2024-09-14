@@ -31,12 +31,14 @@ class AppView:
         print()
         print(f"\tWelcome, {username}!")
         print("1. List products")
-        print("2. Add to cart (Not implemented)")
-        print("3. Checkout (Not implemented)")
-        print("4. Change password (Not implemented)")
-        print("5. Logout")
-        print("6. Exit")
-        return input_int_minmax(" > ", 1, 6)
+        print("2. Add to cart")
+        print("3. View cart")
+        print("4. Remove from cart")
+        print("5. Checkout (Not implemented)")
+        print("6. Change password (Not implemented)")
+        print("7. Logout")
+        print("8. Exit")
+        return input_int_minmax(" > ", 1, 8)
 
     @classmethod
     def admin_menu(cls) -> int:
@@ -60,7 +62,7 @@ class AppView:
         print("5. Search product (Not implemented)")
         print("6. Add stock")
         print("7. Remove stock")
-        print("8. Exit")
+        print("8. Back")
         return input_int_minmax(" > ", 1, 8)
 
     @classmethod
@@ -71,7 +73,7 @@ class AppView:
         print("3. Update order (Not implemented)")
         print("4. Cancel order (Not implemented)")
         print("5. Search order (Not implemented)")
-        print("6. Exit")
+        print("6. Back")
         return input_int_minmax(" > ", 1, 6)
 
     @classmethod
@@ -79,7 +81,7 @@ class AppView:
         print()
         print("1. Get report (Not implemented)")
         print("2. Cash out (Not implemented)")
-        print("3. Exit")
+        print("3. Back")
         return input_int_minmax(" > ", 1, 3)
 
     @classmethod
@@ -91,5 +93,5 @@ class AppView:
         print("4. Remove user (Not implemented)")
         print("5. Search user (Not implemented)")
         print("6. Check user (Not implemented)")
-        print("7. Exit")
+        print("7. Back")
         return input_int_minmax(" > ", 1, 7)

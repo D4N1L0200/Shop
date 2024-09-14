@@ -6,6 +6,7 @@ class App:
     def __init__(self) -> None:
         self.running: bool = True
         self.username: str = ""
+        self.user_id: str = ""
         self.password: str = ""
         self.logged_in: bool = False
 
@@ -16,6 +17,7 @@ class App:
         if data["logged"]:
             self.username = data["username"]
             self.password = data["password"]
+            self.user_id = data["user_id"]
 
         self.login(self.username, self.password)
 
@@ -36,6 +38,7 @@ class App:
         self.logged_in = True
         self.username = username
         self.password = password
+        self.user_id = user_id.hex
 
         with open("data/settings.json", "w") as file:
             json.dump(
@@ -43,6 +46,7 @@ class App:
                     "logged": self.logged_in,
                     "username": self.username,
                     "password": self.password,
+                    "user_id": self.user_id,
                 },
                 file,
                 indent=4,
@@ -59,7 +63,12 @@ class App:
         if user_id.hex in data:
             return "User already exists."
 
-        data[user_id.hex] = {"username": username, "password": password}
+        data[user_id.hex] = {
+            "username": username,
+            "password": password,
+            "user_id": user_id.hex,
+            "cart": [],
+        }
 
         with open("data/users.json", "w") as file:
             json.dump(data, file, indent=4)
@@ -70,6 +79,7 @@ class App:
         self.logged_in = False
         self.username = ""
         self.password = ""
+        self.user_id = ""
 
         with open("data/settings.json", "w") as file:
             json.dump(
@@ -77,6 +87,8 @@ class App:
                     "logged": self.logged_in,
                     "username": self.username,
                     "password": self.password,
+                    "user_id": self.user_id,
+                    "cart": [],
                 },
                 file,
                 indent=4,
