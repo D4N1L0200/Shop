@@ -8,12 +8,12 @@ class AppController:
         from controllers import StockManager, Cart
 
         self.app: App = App()
-        self.prod_contr: StockManager = StockManager()
+        self.stock_mngr: StockManager = StockManager()
         self.cart: Cart = Cart()
 
     def main(self) -> None:
         self.app.load_data()
-        self.prod_contr.load_data()
+        self.stock_mngr.load_data()
 
         AppView.message("App initialized.")
 
@@ -69,10 +69,8 @@ class AppController:
                 case 5:
                     self.checkout()
                 case 6:
-                    self.change_password()
-                case 7:
                     self.logout()
-                case 8:
+                case 7:
                     self.app.running = False
                     break
 
@@ -131,7 +129,7 @@ class AppController:
     # User & Admin methods
 
     def list_products(self) -> None:
-        products: list[Product] = self.prod_contr.get_products()
+        products: list[Product] = self.stock_mngr.get_products()
         ProductView.list_products(products)
 
     def logout(self) -> None:
@@ -142,38 +140,48 @@ class AppController:
 
     def add_to_cart(self) -> None:
         prod_idx: int = (
-            ProductView.input_product_index(self.prod_contr.get_products_len()) - 1
+            ProductView.input_product_index(self.stock_mngr.get_products_len()) - 1
         )
-        prod_id: str = self.prod_contr.idx_to_id(prod_idx)
+        prod_id: str = self.stock_mngr.idx_to_id(prod_idx)
 
-        if not self.prod_contr.id_exists(prod_id):
+        if not self.stock_mngr.id_exists(prod_id):
             raise ValueError(f"Product not found: {prod_id}")
 
-        prod: Product = self.prod_contr.get_product_by_id(prod_id)
+        prod: Product = self.stock_mngr.get_product_by_id(prod_id)
         amount: int = CartView.input_buy_amount(prod.get_stock())
 
-        self.prod_contr.decrease_stock(prod_id, amount)
+        self.stock_mngr.decrease_stock(prod_id, amount)
         item: CartItem = CartItem(prod_id, amount)
         self.cart.insert(item, self.app.user_id)
         AppView.message(f"Added {prod.get_name()} to cart.")
 
     def view_cart(self) -> None:
         items: list[CartItem] = self.cart.get_items()
-        CartView.list_items(items, self.prod_contr.get_product_by_id)
+        CartView.list_items(items, self.stock_mngr.get_product_by_id)
 
     def remove_from_cart(self) -> None:
         item_idx: int = CartView.input_item_index(self.cart.get_items_len()) - 1
         item: CartItem = self.cart.get_item_by_idx(item_idx)
-        
-        self.prod_contr.increase_stock(item.get_prod_id(), item.get_quantity())
+
+        self.stock_mngr.increase_stock(item.get_prod_id(), item.get_quantity())
 
         self.cart.remove_by_idx(item_idx, self.app.user_id)
 
     def checkout(self) -> None:
-        pass
+        items: list[CartItem] = self.cart.get_items()
+        if not items:
+            AppView.message("Cart is empty. Nothing to checkout.")
+            return
 
-    def change_password(self) -> None:
-        pass
+        CartView.list_items(items, self.stock_mngr.get_product_by_id)
+
+        if CartView.confirm_purchase():
+            CartView.get_payment()
+            # TODO: confirm pending order from stock manager
+            self.cart.clear(self.app.user_id)
+            # TODO: store sales
+        else:
+            CartView.cancel_purchase()
 
     ## Admin methods
     # Product manager
@@ -190,15 +198,15 @@ class AppController:
             prod_id.hex, prod_name, prod_description, prod_price, prod_stock
         )
 
-        self.prod_contr.insert(product)
+        self.stock_mngr.insert(product)
 
     def update_product(self) -> None:
         prod_idx: int = (
-            ProductView.input_product_index(self.prod_contr.get_products_len()) - 1
+            ProductView.input_product_index(self.stock_mngr.get_products_len()) - 1
         )
-        prod_id: str = self.prod_contr.idx_to_id(prod_idx)
+        prod_id: str = self.stock_mngr.idx_to_id(prod_idx)
 
-        old_prod: Product = self.prod_contr.get_product_by_id(prod_id)
+        old_prod: Product = self.stock_mngr.get_product_by_id(prod_id)
 
         prod_name: str = ProductView.update_product_name(old_prod.get_name())
         prod_description: str = ProductView.update_product_description(
@@ -211,47 +219,47 @@ class AppController:
             prod_id, prod_name, prod_description, prod_price, prod_stock
         )
 
-        if not self.prod_contr.id_exists(prod_id):
+        if not self.stock_mngr.id_exists(prod_id):
             raise ValueError(f"Product not found: {prod_id}")
 
-        self.prod_contr.update(prod_id, product)
+        self.stock_mngr.update(prod_id, product)
 
     def remove_product(self) -> None:
         prod_idx: int = (
-            ProductView.input_product_index(self.prod_contr.get_products_len()) - 1
+            ProductView.input_product_index(self.stock_mngr.get_products_len()) - 1
         )
-        prod_id: str = self.prod_contr.idx_to_id(prod_idx)
+        prod_id: str = self.stock_mngr.idx_to_id(prod_idx)
 
-        if self.prod_contr.id_exists(prod_id):
+        if self.stock_mngr.id_exists(prod_id):
             raise ValueError(f"Product not found: {prod_id}")
 
-        self.prod_contr.delete_by_id(prod_id)
+        self.stock_mngr.delete_by_id(prod_id)
 
     def search_product(self) -> None:
         pass
 
     def increase_stock(self) -> None:
         prod_idx: int = (
-            ProductView.input_product_index(self.prod_contr.get_products_len()) - 1
+            ProductView.input_product_index(self.stock_mngr.get_products_len()) - 1
         )
-        prod_id: str = self.prod_contr.idx_to_id(prod_idx)
+        prod_id: str = self.stock_mngr.idx_to_id(prod_idx)
 
         amount: int = ProductView.input_stock_change()
 
-        if not self.prod_contr.id_exists(prod_id):
+        if not self.stock_mngr.id_exists(prod_id):
             raise ValueError(f"Product not found: {prod_id}")
 
-        self.prod_contr.increase_stock(prod_id, amount)
+        self.stock_mngr.increase_stock(prod_id, amount)
 
     def decrease_stock(self) -> None:
         prod_idx: int = (
-            ProductView.input_product_index(self.prod_contr.get_products_len()) - 1
+            ProductView.input_product_index(self.stock_mngr.get_products_len()) - 1
         )
-        prod_id: str = self.prod_contr.idx_to_id(prod_idx)
+        prod_id: str = self.stock_mngr.idx_to_id(prod_idx)
 
         amount: int = ProductView.input_stock_change()
 
-        if not self.prod_contr.id_exists(prod_id):
+        if not self.stock_mngr.id_exists(prod_id):
             raise ValueError(f"Product not found: {prod_id}")
 
-        self.prod_contr.decrease_stock(prod_id, amount)
+        self.stock_mngr.decrease_stock(prod_id, amount)

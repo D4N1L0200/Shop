@@ -9,7 +9,7 @@
         "name": "Stainless Steel Water Bottle",
         "description": "Insulated water bottle that keeps drinks cold for 24 hours or hot for 12 hours.",
         "price": 19.99,
-        "stock": 250
+        "stock": 233
     },
     "a086835ce02d59ef92be369295dffdd1": {
         "name": "Ergonomic Office Chair",
@@ -21,7 +21,7 @@
         "name": "Smart Fitness Tracker",
         "description": "Tracks heart rate, steps, sleep patterns, and includes GPS tracking.",
         "price": 59.99,
-        "stock": 180
+        "stock": 173
     },
     "e4fd6a8b4a555344b71c7f8aa1b8ffd3": {
         "name": "LED Desk Lamp",

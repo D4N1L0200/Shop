@@ -4,12 +4,12 @@
         "password": "pedro123",
         "cart": [
             {
-                "prod_id": "e4fd6a8b4a555344b71c7f8aa1b8ffd3",
-                "quantity": 3
+                "prod_id": "6fd7d4b8de4351358abcd06f8160ce9c",
+                "quantity": 4
             },
             {
-                "prod_id": "a086835ce02d59ef92be369295dffdd1",
-                "quantity": 2
+                "prod_id": "edc2aac667e75a6cb83aead5651a8d8a",
+                "quantity": 7
             }
         ]
     },

@@ -1,4 +1,5 @@
-from models import CartItem
+from models import CartItem, Product
+from typing import Callable
 import json
 
 
@@ -34,33 +35,39 @@ class Cart:
 
         with open("data/users.json", "w") as file:
             json.dump(data, file, indent=4)
-            
+
     @classmethod
     def get_items(cls) -> list[CartItem]:
         return cls.items
-            
+
     @classmethod
     def get_items_len(cls) -> int:
         return len(cls.items)
-    
+
     @classmethod
     def get_item_by_idx(cls, item_idx: int) -> CartItem:
         if item_idx < 0 or item_idx > len(cls.items) - 1:
             raise IndexError("Index out of range")
-        
+
         return cls.items[item_idx]
 
     @classmethod
     def insert(cls, item: CartItem, user_id: str) -> None:
         cls.items.append(item)
-        
+
         cls.save_data(user_id)
-        
+
     @classmethod
     def remove_by_idx(cls, item_idx: int, user_id: str) -> None:
         if item_idx < 0 or item_idx > len(cls.items) - 1:
             raise IndexError("Index out of range")
-        
+
         cls.items.pop(item_idx)
-        
-        cls.save_data(user_id) 
+
+        cls.save_data(user_id)
+
+    @classmethod
+    def clear(cls, user_id: str) -> None:
+        cls.items = []
+
+        cls.save_data(user_id)

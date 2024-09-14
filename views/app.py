@@ -34,11 +34,10 @@ class AppView:
         print("2. Add to cart")
         print("3. View cart")
         print("4. Remove from cart")
-        print("5. Checkout (Not implemented)")
-        print("6. Change password (Not implemented)")
-        print("7. Logout")
-        print("8. Exit")
-        return input_int_minmax(" > ", 1, 8)
+        print("5. Checkout (Partially implemented)")
+        print("6. Logout")
+        print("7. Exit")
+        return input_int_minmax(" > ", 1, 7)
 
     @classmethod
     def admin_menu(cls) -> int:
