@@ -1,15 +1,4 @@
 from ioutil import input_int_minmax, input_username, input_password
-from os import system
-import platform
-
-
-def cls() -> None:
-    current_os = platform.system()
-
-    if current_os == "Windows":
-        system("cls")
-    else:
-        system("clear")
 
 
 class AppView:
