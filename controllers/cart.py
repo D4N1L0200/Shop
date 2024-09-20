@@ -1,5 +1,4 @@
-from models import CartItem, Product
-from typing import Callable
+from models import CartItem
 import json
 
 
