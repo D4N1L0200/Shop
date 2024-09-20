@@ -30,7 +30,7 @@ class Cart:
 
         for item in cls.items:
             data[user_id]["cart"].append(
-                {"prod_id": item.get_prod_id(), "quantity": item.get_quantity()}
+                {"prod_id": item.get_product_id(), "quantity": item.get_quantity()}
             )
 
         with open("data/users.json", "w") as file:
@@ -53,7 +53,12 @@ class Cart:
 
     @classmethod
     def insert(cls, item: CartItem, user_id: str) -> None:
-        cls.items.append(item)
+        for cart_item in cls.items:
+            if cart_item.get_product_id() == item.get_product_id():
+                cart_item.increase_quantity(item.get_quantity())
+                break
+        else:
+            cls.items.append(item)
 
         cls.save_data(user_id)
 

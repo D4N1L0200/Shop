@@ -1,8 +1,8 @@
-from models import Product
+from models import CartItem, Product
 import json
 
 
-class StockManager:
+class StocksManager:
     products: list[Product] = []
 
     @classmethod
@@ -141,5 +141,105 @@ class StockManager:
             if product.get_id() == prod_id:
                 product.decrease_stock(amount)
                 break
+
+        cls.save_data()
+
+    @classmethod
+    def increase_pending(cls, prod_id: str, amount: int) -> None:
+        if not isinstance(prod_id, str):
+            raise ValueError(f"Invalid value for product id: {prod_id}")
+
+        if not isinstance(amount, int):
+            raise ValueError(f"Invalid value for amount: {amount}")
+
+        if not cls.id_exists(prod_id):
+            raise ValueError(f"Product not found: {prod_id}")
+
+        for product in cls.products:
+            if product.get_id() == prod_id:
+                product.increase_pending(amount)
+                break
+
+        cls.save_data()
+
+    @classmethod
+    def decrease_pending(cls, prod_id: str, amount: int) -> None:
+        if not isinstance(prod_id, str):
+            raise ValueError(f"Invalid value for product id: {prod_id}")
+
+        if not isinstance(amount, int):
+            raise ValueError(f"Invalid value for amount: {amount}")
+
+        if not cls.id_exists(prod_id):
+            raise ValueError(f"Product not found: {prod_id}")
+
+        for product in cls.products:
+            if product.get_id() == prod_id:
+                product.decrease_pending(amount)
+                break
+
+        cls.save_data()
+
+    @classmethod
+    def increase_sold(cls, prod_id: str, amount: int) -> None:
+        if not isinstance(prod_id, str):
+            raise ValueError(f"Invalid value for product id: {prod_id}")
+
+        if not isinstance(amount, int):
+            raise ValueError(f"Invalid value for amount: {amount}")
+
+        if not cls.id_exists(prod_id):
+            raise ValueError(f"Product not found: {prod_id}")
+
+        for product in cls.products:
+            if product.get_id() == prod_id:
+                product.increase_sold(amount)
+                break
+
+        cls.save_data()
+
+    @classmethod
+    def decrease_sold(cls, prod_id: str, amount: int) -> None:
+        if not isinstance(prod_id, str):
+            raise ValueError(f"Invalid value for product id: {prod_id}")
+
+        if not isinstance(amount, int):
+            raise ValueError(f"Invalid value for amount: {amount}")
+
+        if not cls.id_exists(prod_id):
+            raise ValueError(f"Product not found: {prod_id}")
+
+        for product in cls.products:
+            if product.get_id() == prod_id:
+                product.decrease_sold(amount)
+                break
+
+        cls.save_data()
+
+    @classmethod
+    def add_to_cart(cls, prod_id: str, amount: int) -> None:
+        cls.decrease_stock(prod_id, amount)
+        cls.increase_pending(prod_id, amount)
+
+        cls.save_data()
+
+    @classmethod
+    def remove_from_cart(cls, prod_id: str, amount: int) -> None:
+        cls.increase_stock(prod_id, amount)
+        cls.decrease_pending(prod_id, amount)
+
+        cls.save_data()
+
+    @classmethod
+    def sell_product(cls, prod_id: str, amount: int) -> None:
+        cls.increase_sold(prod_id, amount)
+        cls.decrease_pending(prod_id, amount)
+
+        cls.save_data()
+
+    @classmethod
+    def checkout(cls, items: list[CartItem]) -> None:
+        for item in items:
+            cls.sell_product(item.get_product_id(), item.get_quantity())
 
         cls.save_data()

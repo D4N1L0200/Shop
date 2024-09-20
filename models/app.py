@@ -28,7 +28,7 @@ class App:
             data: dict = json.load(file)
 
         if user_id.hex not in data:
-            return "User not found."
+            return "Invalid username."
 
         user = data[user_id.hex]
 
@@ -66,7 +66,6 @@ class App:
         data[user_id.hex] = {
             "username": username,
             "password": password,
-            "user_id": user_id.hex,
             "cart": [],
         }
 

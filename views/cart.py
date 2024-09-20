@@ -1,7 +1,7 @@
 from models import CartItem, Product
 from ioutil import input_int_minmax
 from typing import Callable
-from time import sleep  # simulate payment
+from time import sleep
 
 
 class CartView:
@@ -24,7 +24,7 @@ class CartView:
 
         cls.message("\tCart items:")
         for idx, item in enumerate(items):
-            prod: Product = get_prod(item.get_prod_id())
+            prod: Product = get_prod(item.get_product_id())
             cls.message(
                 f"{idx + 1}. {item.get_quantity()}x {prod.get_name()} for R${prod.get_price() * item.get_quantity():.2f} (R${prod.get_price()} each)"
             )
@@ -45,7 +45,7 @@ class CartView:
 
     @classmethod
     def get_payment(cls) -> None:
-        cls.message("Please send your payment to this key: veryvalidkey@pix.com")
+        cls.message("Please send your payment to this key: veryvalidkey@pix.com\nWaiting for payment...")
         sleep(5)  # simulate payment
         cls.message("Payment confirmed. Thank you for shopping with us!")
 

@@ -3,40 +3,48 @@
         "name": "Wireless Bluetooth Headphones",
         "description": "Noise-canceling wireless headphones with 40 hours of battery life and premium sound quality.",
         "price": 79.99,
-        "stock": 120,
+        "stock": 112,
         "pending": 0,
-        "sold": 0
+        "sold": 5
     },
     "6fd7d4b8de4351358abcd06f8160ce9c": {
         "name": "Stainless Steel Water Bottle",
         "description": "Insulated water bottle that keeps drinks cold for 24 hours or hot for 12 hours.",
         "price": 19.99,
-        "stock": 233,
-        "pending": 4,
-        "sold": 0
+        "stock": 163,
+        "pending": 15,
+        "sold": 15
     },
     "a086835ce02d59ef92be369295dffdd1": {
         "name": "Ergonomic Office Chair",
         "description": "Adjustable office chair with lumbar support, mesh backrest, and comfortable seating.",
         "price": 129.99,
-        "stock": 48,
-        "pending": 0,
-        "sold": 1
+        "stock": 43,
+        "pending": 2,
+        "sold": 3
     },
     "edc2aac667e75a6cb83aead5651a8d8a": {
         "name": "Smart Fitness Tracker",
         "description": "Tracks heart rate, steps, sleep patterns, and includes GPS tracking.",
         "price": 59.99,
-        "stock": 173,
-        "pending": 7,
-        "sold": 0
+        "stock": 126,
+        "pending": 0,
+        "sold": 30
     },
     "e4fd6a8b4a555344b71c7f8aa1b8ffd3": {
         "name": "LED Desk Lamp",
         "description": "Energy-efficient LED desk lamp with adjustable brightness and USB charging port.",
         "price": 34.99,
-        "stock": 57,
+        "stock": 44,
         "pending": 0,
-        "sold": 5
+        "sold": 0
+    },
+    "da3bc54141e55ceab92121ae4790a24b": {
+        "name": "Coca Cola 2L",
+        "description": "refri",
+        "price": 10.5,
+        "stock": 58,
+        "pending": 9,
+        "sold": 18
     }
 }

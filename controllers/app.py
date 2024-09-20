@@ -1,21 +1,25 @@
-from models import App, CartItem, Product  # type: ignore
-from views import AppView, CartView, ProductView  # type: ignore
+from models import App, CartItem, Product, Sale, User  # type: ignore
+from views import AppView, CartView, ProductView, SaleView, UserView  # type: ignore
 import uuid
 
 
 class AppController:
     def __init__(self) -> None:
-        from controllers import StockManager, Cart
+        from controllers import StocksManager, Cart, SalesManager, UsersManager
 
         self.app: App = App()
-        self.stock_mngr: StockManager = StockManager()
+        self.stocks_mngr: StocksManager = StocksManager()
         self.cart: Cart = Cart()
+        self.sales_mngr: SalesManager = SalesManager()
+        self.users_mngr: UsersManager = UsersManager()
 
     def main(self) -> None:
         self.app.load_data()
-        self.stock_mngr.load_data()
+        self.stocks_mngr.load_data()
+        self.sales_mngr.load_data()
+        self.users_mngr.load_data()
 
-        AppView.message("App initialized.")
+        AppView.message("App initialized. Welcome to the shop!")
 
         try:
             while self.app.running:
@@ -45,6 +49,7 @@ class AppController:
                     AppView.message("Register menu.")
                     username, password = AppView.register_menu()
                     message = self.app.register(username, password)
+                    self.users_mngr.load_data()
                     AppView.message(message)
                 case 3:
                     self.app.running = False
@@ -69,12 +74,15 @@ class AppController:
                 case 5:
                     self.checkout()
                 case 6:
-                    self.logout()
+                    self.view_history()
                 case 7:
+                    self.logout()
+                case 8:
                     self.app.running = False
                     break
 
     def admin_loop(self) -> None:
+
         while self.app.logged_in:
             op: int = AppView.admin_menu()
 
@@ -82,14 +90,12 @@ class AppController:
                 case 1:
                     self.manage_products_loop()
                 case 2:
-                    self.manage_orders_loop()
-                case 3:
                     self.manage_finances_loop()
-                case 4:
+                case 3:
                     self.manage_users_loop()
-                case 5:
+                case 4:
                     self.logout()
-                case 6:
+                case 5:
                     self.app.running = False
                     break
 
@@ -117,34 +123,20 @@ class AppController:
                 case 8:
                     break
 
-    def manage_orders_loop(self) -> None:
-        while True:
-            op: int = AppView.orders_menu()
-
-            match op:
-                case 1:
-                    pass
-                case 2:
-                    pass
-                case 3:
-                    pass
-                case 4:
-                    pass
-                case 5:
-                    pass
-                case 6:
-                    break
-
     def manage_finances_loop(self) -> None:
         while True:
             op: int = AppView.finances_menu()
 
             match op:
                 case 1:
-                    self.get_report()
+                    self.list_sales()
                 case 2:
-                    pass
+                    self.list_sales_by_user()
                 case 3:
+                    self.get_report()
+                case 4:
+                    self.cash_out()
+                case 5:
                     break
 
     def manage_users_loop(self) -> None:
@@ -153,18 +145,12 @@ class AppController:
 
             match op:
                 case 1:
-                    pass
+                    self.list_users()
                 case 2:
-                    pass
+                    self.remove_user()
                 case 3:
-                    pass
-                case 4:
-                    pass
+                    self.search_user()
                 case 5:
-                    pass
-                case 6:
-                    pass
-                case 7:
                     break
 
     # User & Admin methods
@@ -176,35 +162,40 @@ class AppController:
     ## User methods
 
     def list_products(self) -> None:
-        products: list[Product] = self.stock_mngr.get_products()
+        products: list[Product] = self.stocks_mngr.get_products()
         ProductView.list_products(products)
 
     def add_to_cart(self) -> None:
         prod_idx: int = (
-            ProductView.input_product_index(self.stock_mngr.get_products_len()) - 1
+            ProductView.input_product_index(self.stocks_mngr.get_products_len()) - 1
         )
-        prod_id: str = self.stock_mngr.idx_to_id(prod_idx)
+        prod_id: str = self.stocks_mngr.idx_to_id(prod_idx)
 
-        if not self.stock_mngr.id_exists(prod_id):
+        if not self.stocks_mngr.id_exists(prod_id):
             raise ValueError(f"Product not found: {prod_id}")
 
-        prod: Product = self.stock_mngr.get_product_by_id(prod_id)
+        prod: Product = self.stocks_mngr.get_product_by_id(prod_id)
+
+        if prod.get_stock() == 0:
+            ProductView.out_of_stock(prod)
+            return
+
         amount: int = CartView.input_buy_amount(prod.get_stock())
 
-        self.stock_mngr.decrease_stock(prod_id, amount)
+        self.stocks_mngr.add_to_cart(prod_id, amount)
         item: CartItem = CartItem(prod_id, amount)
         self.cart.insert(item, self.app.user_id)
         AppView.message(f"Added {prod.get_name()} to cart.")
 
     def view_cart(self) -> None:
         items: list[CartItem] = self.cart.get_items()
-        CartView.list_items(items, self.stock_mngr.get_product_by_id)
+        CartView.list_items(items, self.stocks_mngr.get_product_by_id)
 
     def remove_from_cart(self) -> None:
         item_idx: int = CartView.input_item_index(self.cart.get_items_len()) - 1
         item: CartItem = self.cart.get_item_by_idx(item_idx)
 
-        self.stock_mngr.increase_stock(item.get_prod_id(), item.get_quantity())
+        self.stocks_mngr.remove_from_cart(item.get_product_id(), item.get_quantity())
 
         self.cart.remove_by_idx(item_idx, self.app.user_id)
 
@@ -214,21 +205,32 @@ class AppController:
             AppView.message("Cart is empty. Nothing to checkout.")
             return
 
-        CartView.list_items(items, self.stock_mngr.get_product_by_id)
+        CartView.list_items(items, self.stocks_mngr.get_product_by_id)
 
         if CartView.confirm_purchase():
             CartView.get_payment()
-            # TODO: confirm pending order from stock manager
+            self.stocks_mngr.checkout(items)
+            self.sales_mngr.sell(
+                items, self.app.user_id, self.stocks_mngr.get_product_by_id
+            )
             self.cart.clear(self.app.user_id)
-            # TODO: store sales
         else:
             CartView.cancel_purchase()
+
+    def view_history(self) -> None:
+        sales: list[Sale] = self.sales_mngr.get_sales_by_user(self.app.user_id)
+        SaleView.list_sales_by_user(
+            sales,
+            self.stocks_mngr.get_product_by_id,
+            self.users_mngr.get_user_by_id,
+            self.app.user_id,
+        )
 
     ## Admin methods
     # Product manager
 
     def list_products_admin(self) -> None:
-        products: list[Product] = self.stock_mngr.get_products()
+        products: list[Product] = self.stocks_mngr.get_products()
         ProductView.list_products_full(products)
 
     def add_product(self) -> None:
@@ -243,15 +245,15 @@ class AppController:
             prod_id.hex, prod_name, prod_description, prod_price, prod_stock, 0, 0
         )
 
-        self.stock_mngr.insert(product)
+        self.stocks_mngr.insert(product)
 
     def update_product(self) -> None:
         prod_idx: int = (
-            ProductView.input_product_index(self.stock_mngr.get_products_len()) - 1
+            ProductView.input_product_index(self.stocks_mngr.get_products_len()) - 1
         )
-        prod_id: str = self.stock_mngr.idx_to_id(prod_idx)
+        prod_id: str = self.stocks_mngr.idx_to_id(prod_idx)
 
-        old_prod: Product = self.stock_mngr.get_product_by_id(prod_id)
+        old_prod: Product = self.stocks_mngr.get_product_by_id(prod_id)
 
         prod_name: str = ProductView.update_product_name(old_prod.get_name())
         prod_description: str = ProductView.update_product_description(
@@ -272,54 +274,99 @@ class AppController:
             prod_sold,
         )
 
-        if not self.stock_mngr.id_exists(prod_id):
+        if not self.stocks_mngr.id_exists(prod_id):
             raise ValueError(f"Product not found: {prod_id}")
 
-        self.stock_mngr.update(prod_id, product)
+        self.stocks_mngr.update(prod_id, product)
 
     def remove_product(self) -> None:
         prod_idx: int = (
-            ProductView.input_product_index(self.stock_mngr.get_products_len()) - 1
+            ProductView.input_product_index(self.stocks_mngr.get_products_len()) - 1
         )
-        prod_id: str = self.stock_mngr.idx_to_id(prod_idx)
+        prod_id: str = self.stocks_mngr.idx_to_id(prod_idx)
 
-        if self.stock_mngr.id_exists(prod_id):
+        if self.stocks_mngr.id_exists(prod_id):
             raise ValueError(f"Product not found: {prod_id}")
 
-        self.stock_mngr.delete_by_id(prod_id)
+        self.stocks_mngr.delete_by_id(prod_id)
 
     def search_product(self) -> None:
         pass
 
     def increase_stock(self) -> None:
         prod_idx: int = (
-            ProductView.input_product_index(self.stock_mngr.get_products_len()) - 1
+            ProductView.input_product_index(self.stocks_mngr.get_products_len()) - 1
         )
-        prod_id: str = self.stock_mngr.idx_to_id(prod_idx)
+        prod_id: str = self.stocks_mngr.idx_to_id(prod_idx)
 
         amount: int = ProductView.input_stock_change()
 
-        if not self.stock_mngr.id_exists(prod_id):
+        if not self.stocks_mngr.id_exists(prod_id):
             raise ValueError(f"Product not found: {prod_id}")
 
-        self.stock_mngr.increase_stock(prod_id, amount)
+        self.stocks_mngr.increase_stock(prod_id, amount)
 
     def decrease_stock(self) -> None:
         prod_idx: int = (
-            ProductView.input_product_index(self.stock_mngr.get_products_len()) - 1
+            ProductView.input_product_index(self.stocks_mngr.get_products_len()) - 1
         )
-        prod_id: str = self.stock_mngr.idx_to_id(prod_idx)
+        prod_id: str = self.stocks_mngr.idx_to_id(prod_idx)
 
         amount: int = ProductView.input_stock_change()
 
-        if not self.stock_mngr.id_exists(prod_id):
+        if not self.stocks_mngr.id_exists(prod_id):
             raise ValueError(f"Product not found: {prod_id}")
 
-        self.stock_mngr.decrease_stock(prod_id, amount)
-
-    # Order manager
+        self.stocks_mngr.decrease_stock(prod_id, amount)
 
     # Finance manager
 
+    def list_sales(self) -> None:
+        sales: list[Sale] = self.sales_mngr.get_sales()
+        SaleView.list_sales(
+            sales, self.stocks_mngr.get_product_by_id, self.users_mngr.get_user_by_id
+        )
+
+    def list_sales_by_user(self) -> None:
+        user_idx: int = UserView.input_user_index(self.users_mngr.get_users_len()) - 1
+        user_id: str = self.users_mngr.idx_to_id(user_idx)
+
+        if not self.users_mngr.id_exists(user_id):
+            raise ValueError(f"User not found: {user_id}")
+
+        sales: list[Sale] = self.sales_mngr.get_sales_by_user(user_id)
+        SaleView.list_sales_by_user(
+            sales,
+            self.stocks_mngr.get_product_by_id,
+            self.users_mngr.get_user_by_id,
+            user_id,
+        )
+
     def get_report(self) -> None:
+        total: float = self.sales_mngr.get_total()
+        amount: int = self.sales_mngr.get_amount()
+        SaleView.get_report(total, amount)
+
+    def cash_out(self) -> None:
+        total: float = self.sales_mngr.get_total()
+        amount: int = self.sales_mngr.get_amount()
+        self.sales_mngr.clear()
+        SaleView.cash_out(total, amount)
+
+    # User manager
+
+    def list_users(self) -> None:
+        users: list[User] = self.users_mngr.get_users()
+        UserView.list_users(users)
+
+    def remove_user(self) -> None:
+        user_idx: int = UserView.input_user_index(self.users_mngr.get_users_len()) - 1
+        user_id: str = self.users_mngr.idx_to_id(user_idx)
+
+        if not self.users_mngr.id_exists(user_id):
+            raise ValueError(f"User not found: {user_id}")
+
+        self.users_mngr.delete_by_id(user_id)
+
+    def search_user(self) -> None:
         pass

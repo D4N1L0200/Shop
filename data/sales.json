@@ -1,19 +1,51 @@
 {
-	"962fabcf30eb5a60b05fdf295d11f4d0": [
-		{
-			"products": [
-				{
-					"prod_id": "e4fd6a8b4a555344b71c7f8aa1b8ffd3",
-					"quantity": 5,
-					"price": 174.95
-				},
-				{
-					"prod_id": "a086835ce02d59ef92be369295dffdd1",
-					"quantity": 1,
-					"price": 129.99
-				}
-			],
-			"total": 304.94
-		}
-	]
+    "962fabcf30eb5a60b05fdf295d11f4d0": [
+        {
+            "products": [
+                {
+                    "prod_id": "a086835ce02d59ef92be369295dffdd1",
+                    "quantity": 3,
+                    "price": 129.99
+                },
+                {
+                    "prod_id": "aa1a87d5809f50d9a1c2d68e371e0b60",
+                    "quantity": 5,
+                    "price": 79.99
+                },
+                {
+                    "prod_id": "edc2aac667e75a6cb83aead5651a8d8a",
+                    "quantity": 7,
+                    "price": 59.99
+                }
+            ],
+            "total": 1209.85
+        },
+        {
+            "products": [
+                {
+                    "prod_id": "edc2aac667e75a6cb83aead5651a8d8a",
+                    "quantity": 23,
+                    "price": 59.99
+                }
+            ],
+            "total": 1379.77
+        }
+    ],
+    "51b4ecce4eb15b7582ae092e3dcc286a": [
+        {
+            "products": [
+                {
+                    "prod_id": "6fd7d4b8de4351358abcd06f8160ce9c",
+                    "quantity": 7,
+                    "price": 19.99
+                },
+                {
+                    "prod_id": "da3bc54141e55ceab92121ae4790a24b",
+                    "quantity": 13,
+                    "price": 10.5
+                }
+            ],
+            "total": 276.43
+        }
+    ]
 }

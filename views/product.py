@@ -117,3 +117,7 @@ class ProductView:
     def input_stock_change(cls) -> int:
         amount: int = input_int_min("Amount: ", 1)
         return amount
+
+    @classmethod
+    def out_of_stock(cls, product: Product) -> None:
+        cls.message(f"{product.get_name()} is out of stock.")
