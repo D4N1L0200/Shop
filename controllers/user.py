@@ -2,7 +2,7 @@ from models import User
 import json
 
 
-class UsersManager:
+class UsersManager: 
     users: list[User] = []
 
     @classmethod
@@ -73,16 +73,16 @@ class UsersManager:
         raise ValueError(f"user not found: {user_id}")
 
     @classmethod
-    def delete_by_id(cls, prod_id: str) -> None:
-        if not isinstance(prod_id, str):
-            raise ValueError(f"Invalid value for user id: {prod_id}")
+    def delete_by_id(cls, user_id: str) -> None:
+        if not isinstance(user_id, str):
+            raise ValueError(f"Invalid value for user id: {user_id}")
 
-        if not cls.id_exists(prod_id):
-            raise ValueError(f"User not found: {prod_id}")
+        if not cls.id_exists(user_id):
+            raise ValueError(f"User not found: {user_id}")
 
         data: dict = cls.load_dict()
 
-        data.pop(prod_id)
+        data.pop(user_id)
 
         cls.save_dict(data)
 
