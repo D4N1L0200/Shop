@@ -150,7 +150,7 @@ class AppController:
                     self.remove_user()
                 case 3:
                     self.search_user()
-                case 5:
+                case 4:
                     break
 
     # User & Admin methods

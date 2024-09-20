@@ -4,26 +4,21 @@
         "password": "pedro123",
         "cart": [
             {
-                "prod_id": "6fd7d4b8de4351358abcd06f8160ce9c",
-                "quantity": 15
-            },
-            {
                 "prod_id": "da3bc54141e55ceab92121ae4790a24b",
                 "quantity": 9
             },
             {
                 "prod_id": "a086835ce02d59ef92be369295dffdd1",
                 "quantity": 2
+            },
+            {
+                "prod_id": "aa1a87d5809f50d9a1c2d68e371e0b60",
+                "quantity": 1
             }
         ]
     },
     "bace070115e3514497c547487d543032": {
         "username": "admin",
         "password": "admin"
-    },
-    "51b4ecce4eb15b7582ae092e3dcc286a": {
-        "username": "Pedro",
-        "password": "senha",
-        "cart": []
     }
 }

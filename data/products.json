@@ -3,16 +3,16 @@
         "name": "Wireless Bluetooth Headphones",
         "description": "Noise-canceling wireless headphones with 40 hours of battery life and premium sound quality.",
         "price": 79.99,
-        "stock": 112,
-        "pending": 0,
+        "stock": 111,
+        "pending": 1,
         "sold": 5
     },
     "6fd7d4b8de4351358abcd06f8160ce9c": {
         "name": "Stainless Steel Water Bottle",
         "description": "Insulated water bottle that keeps drinks cold for 24 hours or hot for 12 hours.",
         "price": 19.99,
-        "stock": 163,
-        "pending": 15,
+        "stock": 178,
+        "pending": 0,
         "sold": 15
     },
     "a086835ce02d59ef92be369295dffdd1": {

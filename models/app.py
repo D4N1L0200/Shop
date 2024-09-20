@@ -87,7 +87,6 @@ class App:
                     "username": self.username,
                     "password": self.password,
                     "user_id": self.user_id,
-                    "cart": [],
                 },
                 file,
                 indent=4,
